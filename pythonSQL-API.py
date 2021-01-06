@@ -7,13 +7,13 @@ import sys
 import requests
 from pprint import pprint
 #from flask import flask
-
+y = {}
 contact_mogelijkheden = {"Marijn"}
 keuze_mogelijkheden = {"achternaam", "tel_nummer", "land"}
 alles_menu = """
 _____________________________________________________________________________
 | typ f om een specifiek persoon te zoeken.                                 |
-| typ g om alle contacten en al hun info te zien.                           |
+| typ k om alle personen en al hun info te zien.                            |
 | typ q om terug te gaan naar het hoofd menu.                               |
 |___________________________________________________________________________|
 """
@@ -30,7 +30,7 @@ _____________________________________________________________________________
 | typ i om een naam, achternaam, land en telefoon nummer te verwijderen.    |
 | typ p om een contact aan te passen.                                       |
 | typ t om alle contacten en info te zien.                                  |
-| typ f om de api te bekijken.                                              |
+| typ r om data uit de database te bekijken via de API.                     |
 | typ q om het programma te sluiten.                                        |
 |___________________________________________________________________________|
 '''
@@ -96,7 +96,7 @@ def contact_verwijderen():
     in_Telefoonboek = c.execute("SELECT * FROM Telefoonboek WHERE naam = :first AND achternaam = :last",
                 {'first': gekozen_naam_verw, 'last': gekozen_achternaam_verw}).fetchall()
     if in_Telefoonboek:
-        print(gekozen_naam_verw + gekozen_achternaam_verw)
+        print(gekozen_naam_verw + " " + gekozen_achternaam_verw)
         c.execute("DELETE from Telefoonboek WHERE naam = :first AND achternaam = :last",
                     {'first': gekozen_naam_verw, 'last': gekozen_achternaam_verw})
         enter = input("Druk enter om verder te gaan. ")
@@ -176,13 +176,6 @@ def runner_code():
         c.execute("SELECT naam, achternaam, land ,tel_nummer FROM Telefoonboek")
         rows = c.fetchall()
         rowarray_list = []
-        y = {
-            'Marijn': {
-                'achternaam': 'Diepeveen',
-                'land': 'Nederland',
-                'tel_nummer': '06666'}
-            }
-
         for row in rows:
             #t = (row[0], row[1], row[2], row[3])
             #rowarray_list.append(t)
@@ -253,7 +246,7 @@ def runner_code():
                 else:
                     print("Dat persoon staat niet in het telefoonboek. ")
                     enter = input("Druk enter om door te gaan. ")
-            elif alles_zien == "g":
+            elif alles_zien == "k":
                 pprint(y)
                 enter = input("Druk enter om door te gaan. ")
             else:
