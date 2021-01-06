@@ -229,7 +229,7 @@ def runner_code():
                         os.system('cls' if os.name == 'nt' else 'clear')
                         print(naam_keuze + " " + y[naam_keuze]["achternaam"])
                         print(naam_keuze + " woont in " + y[naam_keuze]["land"])
-                        print(naam_keuze + " zijn telefoonnummer is " + y[naam_keuze]["tel_nummer"])
+                        print(y[naam_keuze]["tel_nummer"])
                         enter = input("Druk enter om door te gaan. ")
                     if optie_gebruiker == "achternaam":
                         print(y[naam_keuze][optie_gebruiker])
