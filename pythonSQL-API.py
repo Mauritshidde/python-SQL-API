@@ -1,13 +1,36 @@
 import sqlite3
+import json
+import collections
+import psycopg2
 import os
 import sys
+import requests
+from pprint import pprint
+#from flask import flask
 
+contact_mogelijkheden = {"Marijn"}
+keuze_mogelijkheden = {"achternaam", "tel_nummer", "land"}
+alles_menu = """
+_____________________________________________________________________________
+| typ f om een specifiek persoon te zoeken.                                 |
+| typ g om alle contacten en al hun info te zien.                           |
+| typ q om terug te gaan naar het hoofd menu.                               |
+|___________________________________________________________________________|
+"""
+API_menu = """
+_____________________________________________________________________________
+| typ k om alle info van de persoon te zien.                                |
+| of maak een keuze uit de opties hieronder.                                |
+| achternaam, tel_nummer of land.                                           |
+|___________________________________________________________________________|
+"""
 menu = '''
 _____________________________________________________________________________
 | typ k om een naam, achternaam, land en telefoon nummer toe te voegen.     |
 | typ i om een naam, achternaam, land en telefoon nummer te verwijderen.    |
 | typ p om een contact aan te passen.                                       |
 | typ t om alle contacten en info te zien.                                  |
+| typ f om de api te bekijken.                                              |
 | typ q om het programma te sluiten.                                        |
 |___________________________________________________________________________|
 '''
@@ -83,11 +106,110 @@ def contact_verwijderen():
 
     conn.commit()
 
+#def maak_de_api():
+    #c.execute("SELECT naam, achternaam, land ,tel_nummer FROM Telefoonboek")
+    #rows = c.fetchall()
+    #rowarray_list = []
+    #y = {
+        #"Marijn": [
+            #{"achternaam": "Diepeveen"},
+            #{"land": "Nederland"},
+            #{"tel_nummer": "06666"}
+        #]
+        #}
+
+    #for row in rows:
+        ##t = (row[0], row[1], row[2], row[3])
+        ##rowarray_list.append(t)
+        #x = {
+            #row[0]: [
+                #{"achternaam": row[1]},
+                #{"land": row[2]},
+                #{"tel_nummer": row[3]}
+            #]
+            #}
+
+        #y.update(x)
+
+    ##j = json.dumps(rowarray_list)
+    ##pprint(y)
+    #de_API = json.dumps(y)
+    ##rowarrays_file = 'Telefoonboek.json'
+    #print(de_API)
+    #return de_API
+
+def maak_de_api2():
+    conn_string = "host='localhost' dbname='Telefoonboek.db' user='me' password='pw'"
+    conn = psycopg2.connect(conn_string)
+    c.execute("SELECT * FROM Telefoonboek")
+    rows = cursor.fetchall()
+    rowarray_list = []
+
+    for row in rows:
+        t = (row[0], row[1], row[2], row[3])
+        rowarray_list.append(t)
+
+    j = json.dumps(rowarray_list)
+
+    with open("student_rowarrays.js", "w") as f:
+        f.write(j)
+        objects_list = []
+
+    for row in rows:
+        d = collections.OrderedDict()
+        d["naam"] = row[0]
+        d["achternaam"] = row[1]
+        d["land"] = row[2]
+        d["tel_nummer"] = row[3]
+        objects_list.append(d)
+
+    j = json.dumps(objects_list)
+
+    with open("student_objects.js", "w") as f:
+        f.write(j)
+    conn.close()
+    pprint(j)
+
 def runner_code():
     doorgaan = True
     while doorgaan:
+        c.execute("SELECT naam, achternaam, land ,tel_nummer FROM Telefoonboek")
+        rows = c.fetchall()
+        rowarray_list = []
+        y = {
+            'Marijn': {
+                'achternaam': 'Diepeveen',
+                'land': 'Nederland',
+                'tel_nummer': '06666'}
+            }
+
+        for row in rows:
+            #t = (row[0], row[1], row[2], row[3])
+            #rowarray_list.append(t)
+            x = {
+                row[0]: {
+                    'achternaam': row[1],
+                    'land': row[2],
+                    'tel_nummer': row[3]}
+                }
+
+            xz = {row[0]}
+            contact_mogelijkheden.update(xz)
+
+            y.update(x)
+            #de_API2 = requests.get(y)
+
+        with open("Telefoonboek.json", "w") as write_file:
+            json.dump(y, write_file)
+        #response = requests.get(, "Telefoonboek.json")
+        #de_API = flask.jsonify(y)
+        #de_API = json.dumps(y)
+        #de_API = json.loads(y)
         os.system('cls' if os.name == 'nt' else 'clear')
         print(menu)
+        #print(xy)
+        #de_API2 = de_API.json()
+        #print(y)
         keuze_gebruiker = input("Wat is je keuze uit het bovenstaande menu. ")
         if keuze_gebruiker == "k":
             contact_toevoegen()
@@ -101,6 +223,41 @@ def runner_code():
             enter = input("Druk enter om door te gaan. ")
         elif keuze_gebruiker == "q":
             doorgaan = False
+        elif keuze_gebruiker == "r":
+            #pprint(response)
+            print(alles_menu)
+            alles_zien = input("Maak een keuze uit het bovenstaande menu. ")
+            if alles_zien == "f":
+                naam_keuze = input("Wat is de naam van de persoon die je wilt bekijken. ")
+                if naam_keuze in contact_mogelijkheden:
+                    print(API_menu)
+                    optie_gebruiker = input("Wat is je keuze uit het menu hierboven? ")
+                    if optie_gebruiker == "k":
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        print(naam_keuze + " " + y[naam_keuze]["achternaam"])
+                        print(naam_keuze + " woont in " + y[naam_keuze]["land"])
+                        print(naam_keuze + " zijn telefoonnummer is " + y[naam_keuze]["tel_nummer"])
+                        enter = input("Druk enter om door te gaan. ")
+                    if optie_gebruiker == "achternaam":
+                        print(y[naam_keuze][optie_gebruiker])
+                        enter = input("Druk enter om door te gaan. ")
+                    if optie_gebruiker == "tel_nummer":
+                        print(y[naam_keuze][optie_gebruiker])
+                        enter = input("Druk enter om door te gaan. ")
+                    if optie_gebruiker == "land":
+                        print(y[naam_keuze][optie_gebruiker])
+                        enter = input("Druk enter om door te gaan. ")
+                    else:
+                        print("Dat is niet mogelijk. ")
+                        enter = input("Druk enter om door te gaan. ")
+                else:
+                    print("Dat persoon staat niet in het telefoonboek. ")
+                    enter = input("Druk enter om door te gaan. ")
+            elif alles_zien == "g":
+                pprint(y)
+                enter = input("Druk enter om door te gaan. ")
+            else:
+                enter = input("Druk enter om het opnieuw te proberen. ")
         else:
             print("Dat is geen mogelijke keuze. ")
             enter = input("Druk enter om het opnieuw te proberen. ")
