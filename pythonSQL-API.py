@@ -28,7 +28,7 @@ menu = '''
 _____________________________________________________________________________
 | typ k om een naam, achternaam, land en telefoon nummer toe te voegen.     |
 | typ i om een naam, achternaam, land en telefoon nummer te verwijderen.    |
-| typ p om een contact aan te passen.                                       |
+| typ p om een persoon aan te passen.                                       |
 | typ t om alle contacten en info te zien.                                  |
 | typ r om data uit de database te bekijken via de API.                     |
 | typ q om het programma te sluiten.                                        |
