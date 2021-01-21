@@ -139,8 +139,6 @@ def contact_verwijderen():
     #return de_API
 
 def maak_de_api2():
-    conn_string = "host='localhost' dbname='Telefoonboek.db' user='me' password='pw'"
-    conn = psycopg2.connect(conn_string)
     c.execute("SELECT * FROM Telefoonboek")
     rows = cursor.fetchall()
     rowarray_list = []
@@ -208,6 +206,8 @@ def runner_code():
             contact_toevoegen()
         elif keuze_gebruiker == "i":
             contact_verwijderen()
+        elif keuze_gebruiker == "l":
+            print(rowarray_list)
         elif keuze_gebruiker == "p":
             contact_veranderen()
         elif keuze_gebruiker == "t":
