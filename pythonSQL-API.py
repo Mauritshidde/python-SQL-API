@@ -1,14 +1,12 @@
 import sqlite3
 import json
 import collections
-import psycopg2
 import os
 import sys
-import requests
 from pprint import pprint
 #from flask import flask
 y = {}
-contact_mogelijkheden = {"Marijn"}
+contact_mogelijkheden = {""}
 keuze_mogelijkheden = {"achternaam", "tel_nummer", "land"}
 alles_menu = """
 _____________________________________________________________________________
@@ -106,67 +104,61 @@ def contact_verwijderen():
 
     conn.commit()
 
-#def maak_de_api():
-    #c.execute("SELECT naam, achternaam, land ,tel_nummer FROM Telefoonboek")
-    #rows = c.fetchall()
+def maak_de_api():
+    c.execute("SELECT naam, achternaam, land ,tel_nummer FROM Telefoonboek")
+    rows = c.fetchall()
+    rowarray_list = []
+    y = {}
+
+    for row in rows:
+        #t = (row[0], row[1], row[2], row[3])
+        #rowarray_list.append(t)
+        x = {
+            row[0]: [
+                {"achternaam": row[1]},
+                {"land": row[2]},
+                {"tel_nummer": row[3]}
+            ]
+            }
+
+        y.update(x)
+
+    #j = json.dumps(rowarray_list)
+    #pprint(y)
+    de_API = json.dumps(y)
+    #rowarrays_file = 'Telefoonboek.json'
+    print(de_API)
+    return de_API
+
+#def maak_de_api2():
+    #c.execute("SELECT * FROM Telefoonboek")
+    #rows = cursor.fetchall()
     #rowarray_list = []
-    #y = {
-        #"Marijn": [
-            #{"achternaam": "Diepeveen"},
-            #{"land": "Nederland"},
-            #{"tel_nummer": "06666"}
-        #]
-        #}
 
     #for row in rows:
-        ##t = (row[0], row[1], row[2], row[3])
-        ##rowarray_list.append(t)
-        #x = {
-            #row[0]: [
-                #{"achternaam": row[1]},
-                #{"land": row[2]},
-                #{"tel_nummer": row[3]}
-            #]
-            #}
+        #t = (row[0], row[1], row[2], row[3])
+        #rowarray_list.append(t)
 
-        #y.update(x)
+    #j = json.dumps(rowarray_list)
 
-    ##j = json.dumps(rowarray_list)
-    ##pprint(y)
-    #de_API = json.dumps(y)
-    ##rowarrays_file = 'Telefoonboek.json'
-    #print(de_API)
-    #return de_API
+    #with open("student_rowarrays.js", "w") as f:
+        #f.write(j)
+        #objects_list = []
 
-def maak_de_api2():
-    c.execute("SELECT * FROM Telefoonboek")
-    rows = cursor.fetchall()
-    rowarray_list = []
+    #for row in rows:
+        #d = collections.OrderedDict()
+        #d["naam"] = row[0]
+        #d["achternaam"] = row[1]
+        #d["land"] = row[2]
+        #d["tel_nummer"] = row[3]
+        #objects_list.append(d)
 
-    for row in rows:
-        t = (row[0], row[1], row[2], row[3])
-        rowarray_list.append(t)
+    #j = json.dumps(objects_list)
 
-    j = json.dumps(rowarray_list)
-
-    with open("student_rowarrays.js", "w") as f:
-        f.write(j)
-        objects_list = []
-
-    for row in rows:
-        d = collections.OrderedDict()
-        d["naam"] = row[0]
-        d["achternaam"] = row[1]
-        d["land"] = row[2]
-        d["tel_nummer"] = row[3]
-        objects_list.append(d)
-
-    j = json.dumps(objects_list)
-
-    with open("student_objects.js", "w") as f:
-        f.write(j)
-    conn.close()
-    pprint(j)
+    #with open("student_objects.js", "w") as f:
+        #f.write(j)
+    #conn.close()
+    #pprint(j)
 
 def runner_code():
     doorgaan = True
